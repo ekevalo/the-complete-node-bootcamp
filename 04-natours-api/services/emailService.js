@@ -7,8 +7,16 @@ const mailgunTransport = require('nodemailer-mailgun-transport');
 const pug = require('pug');
 const htmlToText = require('html-to-text');
 
+const transport = mailgunTransport({
+  auth: {
+    api_key: process.env.MAILGUN_API_KEY,
+    domain: process.env.MAILGUN_DOMAIN,
+  },
+});
+
 module.exports = class EmailService {
   constructor(user, url) {
+    this.emailClient = nodemailer.createTransport(transport);
     this.to = user.email;
     this.firstName = user.name.split(' ')[0];
     this.url = url;
